@@ -16,7 +16,7 @@ import { IamModule } from './iam/iam.module';
       port: 5432,
       username: 'postgres',
       password: 'pass123',
-      database: 'postgres',
+      database: 'nest-auth',
       autoLoadEntities: true,
       synchronize: true,
     }),

@@ -22,7 +22,7 @@ export class AuthenticationService {
     try {
       const user = new User();
       user.email = signUpDto.email;
-      user.password = signUpDto.password;
+      user.password = await this.hashingService.hash(signUpDto.password);
       await this.userRepository.save(user);
     } catch (err) {
       const pgUniqueViolationErrorCode = '23505';

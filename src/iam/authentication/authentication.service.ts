@@ -14,6 +14,7 @@ import { JwtService } from '@nestjs/jwt';
 import jwtConfig from '../config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { ActiveUserData } from '../interfaces/active-user-data.interface';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -55,6 +56,10 @@ export class AuthenticationService {
     if (!passwordMatch) {
       throw new UnauthorizedException('Password does not match');
     }
+    return this.generateTokens(user);
+  }
+
+  async generateTokens(user: User) {
     const [accessToken, refreshToken] = await Promise.all([
       this.signToken<Partial<ActiveUserData>>(
         user.id,
@@ -63,8 +68,25 @@ export class AuthenticationService {
       ),
       this.signToken(user.id, this.jwtConfiguration.refreshTokenTtl),
     ]);
-
     return { accessToken, refreshToken };
+  }
+
+  async refreshTokens(refreshTokenDto: RefreshTokenDto) {
+    try {
+      const { substring } = await this.jwtService.verifyAsync<
+        Pick<ActiveUserData, 'substring'>
+      >(refreshTokenDto.refreshToken, {
+        secret: this.jwtConfiguration.secret,
+        audience: this.jwtConfiguration.audience,
+        issuer: this.jwtConfiguration.issuer,
+      });
+      const user = await this.userRepository.findOneOrFail({
+        where: { id: substring },
+      });
+      return this.generateTokens(user);
+    } catch (e) {
+      throw new UnauthorizedException();
+    }
   }
 
   private async signToken<T>(userId: number, expiresIn: number, payload?: T) {

@@ -24,6 +24,10 @@ export class RefreshTokenIdsStorage
     return this.redisClient.quit();
   }
 
+  async insert(userId: number, tokenId: string) {
+    await this.redisClient.set(this.getKey(userId), tokenId);
+  }
+
   private getKey(userId: number): string {
     return `user-${userId}`;
   }

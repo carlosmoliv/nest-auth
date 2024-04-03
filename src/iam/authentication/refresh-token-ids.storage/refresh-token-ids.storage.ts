@@ -33,6 +33,10 @@ export class RefreshTokenIdsStorage
     return storedId === tokenId;
   }
 
+  async invalidate(userId: number): Promise<void> {
+    await this.redisClient.del(this.getKey(userId));
+  }
+
   private getKey(userId: number): string {
     return `user-${userId}`;
   }

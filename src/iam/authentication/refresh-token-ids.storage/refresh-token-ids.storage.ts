@@ -23,4 +23,8 @@ export class RefreshTokenIdsStorage
   onApplicationShutdown(signal?: string) {
     return this.redisClient.quit();
   }
+
+  private getKey(userId: number): string {
+    return `user-${userId}`;
+  }
 }

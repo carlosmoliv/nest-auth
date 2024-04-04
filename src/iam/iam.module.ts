@@ -15,6 +15,7 @@ import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.stora
 import { PermissionsGuard } from './authorization/guards/permissions.guard';
 import { PolicyHandlersStorage } from './authorization/policies/policy-handlers.storage';
 import { FrameworkContributorPolicyHandler } from './authorization/policies/framework-contributor.policy';
+import { PoliciesGuard } from './authorization/guards/policies.guard';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { FrameworkContributorPolicyHandler } from './authorization/policies/fram
     {
       provide: APP_GUARD,
       // useClass: RolesGuard,
-      useClass: PermissionsGuard,
+      // useClass: PermissionsGuard,
+      useClass: PoliciesGuard,
     },
     AccessTokenGuard,
     RefreshTokenIdsStorage,

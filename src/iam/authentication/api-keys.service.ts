@@ -18,6 +18,11 @@ export class ApiKeysService {
     return { apiKey, hashedKey };
   }
 
+  extractIdFromApiKey(apiKey: string): string {
+    const [id] = Buffer.from(apiKey, 'base64').toString('ascii').split(' ');
+    return id;
+  }
+
   private generateApiKey(id: number): string {
     const apiKey = `${id} ${randomUUID()}`;
     return Buffer.from(apiKey).toString('base64');

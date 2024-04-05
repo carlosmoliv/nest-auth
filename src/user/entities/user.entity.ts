@@ -24,7 +24,7 @@ export class User {
   isTfaEnabled: boolean;
 
   @Column({ nullable: true })
-  tfaSecret: boolean;
+  tfaSecret: string;
 
   @Column({ nullable: true })
   googleId: string;

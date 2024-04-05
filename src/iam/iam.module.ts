@@ -51,6 +51,6 @@ import { GoogleAuthenticationController } from './authentication/social/google-a
     ApiKeysService,
     GoogleAuthenticationService,
   ],
-  controllers: [AuthenticationController],
+  controllers: [AuthenticationController, GoogleAuthenticationController],
 })
 export class IamModule {}

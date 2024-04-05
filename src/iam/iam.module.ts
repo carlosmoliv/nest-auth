@@ -16,6 +16,7 @@ import { PermissionsGuard } from './authorization/guards/permissions.guard';
 import { PolicyHandlersStorage } from './authorization/policies/policy-handlers.storage';
 import { FrameworkContributorPolicyHandler } from './authorization/policies/framework-contributor.policy';
 import { PoliciesGuard } from './authorization/guards/policies.guard';
+import { ApiKeysService } from './authentication/api-keys.service';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { PoliciesGuard } from './authorization/guards/policies.guard';
     AuthenticationService,
     PolicyHandlersStorage,
     FrameworkContributorPolicyHandler,
+    ApiKeysService,
   ],
   controllers: [AuthenticationController],
 })

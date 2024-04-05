@@ -12,15 +12,16 @@ import { AccessTokenGuard } from './authentication/guards/access-token/access-to
 import { APP_GUARD } from '@nestjs/core';
 import { AuthenticationGuard } from './authentication/guards/authentication/authentication.guard';
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage/refresh-token-ids.storage';
-import { PermissionsGuard } from './authorization/guards/permissions.guard';
 import { PolicyHandlersStorage } from './authorization/policies/policy-handlers.storage';
 import { FrameworkContributorPolicyHandler } from './authorization/policies/framework-contributor.policy';
 import { PoliciesGuard } from './authorization/guards/policies.guard';
 import { ApiKeysService } from './authentication/api-keys.service';
+import { ApiKey } from '../user/api-keys/entities/api-key.entity';
+import { ApiKeyGuard } from './authentication/guards/api-key/api-key.guard';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, ApiKey]),
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
   ],
@@ -40,6 +41,7 @@ import { ApiKeysService } from './authentication/api-keys.service';
       useClass: PoliciesGuard,
     },
     AccessTokenGuard,
+    ApiKeyGuard,
     RefreshTokenIdsStorage,
     AuthenticationService,
     PolicyHandlersStorage,

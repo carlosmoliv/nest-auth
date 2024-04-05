@@ -12,6 +12,12 @@ export interface GeneratedApiKeyPayload {
 export class ApiKeysService {
   constructor(private readonly hashingService: HashingService) {}
 
+  async createdAndHash(id: number): Promise<GeneratedApiKeyPayload> {
+    const apiKey = this.generateApiKey(id);
+    const hashedKey = await this.hashingService.hash(apiKey);
+    return { apiKey, hashedKey };
+  }
+
   private generateApiKey(id: number): string {
     const apiKey = `${id} ${randomUUID()}`;
     return Buffer.from(apiKey).toString('base64');

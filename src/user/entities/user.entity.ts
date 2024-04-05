@@ -5,7 +5,6 @@ import {
   PermissionType,
 } from '../../iam/authorization/permission.type';
 import { ApiKey } from '../api-keys/entities/api-key.entity';
-import { JoinTable } from 'typeorm/browser';
 
 @Entity()
 export class User {
@@ -25,6 +24,5 @@ export class User {
   permissions: PermissionType[];
 
   @OneToMany(() => ApiKey, (apiKey) => apiKey.user, { cascade: true })
-  @JoinTable()
   apiKeys: ApiKey;
 }

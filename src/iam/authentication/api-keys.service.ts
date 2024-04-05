@@ -18,6 +18,10 @@ export class ApiKeysService {
     return { apiKey, hashedKey };
   }
 
+  async validate(apiKey: string, hashedKey: string): Promise<boolean> {
+    return this.hashingService.compare(apiKey, hashedKey);
+  }
+
   extractIdFromApiKey(apiKey: string): string {
     const [id] = Buffer.from(apiKey, 'base64').toString('ascii').split(' ');
     return id;

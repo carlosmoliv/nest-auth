@@ -14,11 +14,20 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   password: string;
 
   @Column({ enum: Role, default: Role.Regular })
   role: Role;
+
+  @Column({ default: false })
+  isTfaEnabled: boolean;
+
+  @Column({ nullable: true })
+  tfaSecret: boolean;
+
+  @Column({ nullable: true })
+  googleId: string;
 
   @Column({ enum: Permission, default: [], type: 'json' })
   permissions: PermissionType[];

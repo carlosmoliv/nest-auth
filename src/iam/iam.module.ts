@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { HashingService } from './hashing/hashing.service';
 import { BcryptService } from './hashing/bcrypt.service';
 import { AuthenticationController } from './authentication/authentication.controller';
@@ -21,6 +21,10 @@ import { ApiKeyGuard } from './authentication/guards/api-key/api-key.guard';
 import { GoogleAuthenticationService } from './authentication/social/google-authentication.service';
 import { GoogleAuthenticationController } from './authentication/social/google-authentication.controller';
 import { OtpAuthenticationService } from './authentication/otp-authentication.service';
+import { SessionAuthenticationService } from './authentication/session-authentication.service';
+import { SessionAuthenticationController } from './authentication/session-authentication.controller';
+import * as session from 'express-session';
+import * as passport from 'passport';
 
 @Module({
   imports: [
@@ -52,7 +56,30 @@ import { OtpAuthenticationService } from './authentication/otp-authentication.se
     ApiKeysService,
     GoogleAuthenticationService,
     OtpAuthenticationService,
+    SessionAuthenticationService,
   ],
-  controllers: [AuthenticationController, GoogleAuthenticationController],
+  controllers: [
+    AuthenticationController,
+    GoogleAuthenticationController,
+    SessionAuthenticationController,
+  ],
 })
-export class IamModule {}
+export class IamModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(
+        session({
+          secret: process.env.SESSION_SECRET,
+          resave: false,
+          saveUninitialized: false,
+          cookie: {
+            sameSite: true,
+            httpOnly: true,
+          },
+        }),
+        passport.initialize(),
+        passport.session(),
+      )
+      .forRoutes('*');
+  }
+}

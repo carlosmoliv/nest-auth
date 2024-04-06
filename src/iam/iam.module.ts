@@ -26,6 +26,8 @@ import { SessionAuthenticationController } from './authentication/session-authen
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { UserSerializer } from './authentication/serializers/user-serializer';
+import * as createRedisStore from 'connect-redis';
+import Redis from 'ioredis';
 
 @Module({
   imports: [
@@ -68,9 +70,11 @@ import { UserSerializer } from './authentication/serializers/user-serializer';
 })
 export class IamModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    const RedisStore = createRedisStore(session);
     consumer
       .apply(
         session({
+          store: new RedisStore({ client: new Redis(6379, 'localhost') }),
           secret: process.env.SESSION_SECRET,
           resave: false,
           saveUninitialized: false,

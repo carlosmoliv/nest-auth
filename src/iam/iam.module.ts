@@ -25,6 +25,7 @@ import { SessionAuthenticationService } from './authentication/session-authentic
 import { SessionAuthenticationController } from './authentication/session-authentication.controller';
 import * as session from 'express-session';
 import * as passport from 'passport';
+import { UserSerializer } from './authentication/serializers/user-serializer';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import * as passport from 'passport';
     GoogleAuthenticationService,
     OtpAuthenticationService,
     SessionAuthenticationService,
+    UserSerializer,
   ],
   controllers: [
     AuthenticationController,

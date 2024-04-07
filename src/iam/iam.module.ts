@@ -23,11 +23,11 @@ import { GoogleAuthenticationController } from './authentication/social/google-a
 import { OtpAuthenticationService } from './authentication/otp-authentication.service';
 import { SessionAuthenticationService } from './authentication/session-authentication.service';
 import { SessionAuthenticationController } from './authentication/session-authentication.controller';
-import * as session from 'express-session';
 import * as passport from 'passport';
+import * as session from 'express-session';
 import { UserSerializer } from './authentication/serializers/user-serializer';
-import * as createRedisStore from 'connect-redis';
 import Redis from 'ioredis';
+import RedisStore from 'connect-redis';
 
 @Module({
   imports: [
@@ -70,11 +70,13 @@ import Redis from 'ioredis';
 })
 export class IamModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    const RedisStore = createRedisStore(session);
+    const redisStore = new RedisStore({
+      client: new Redis(6379, 'localhost'),
+    });
     consumer
       .apply(
         session({
-          store: new RedisStore({ client: new Redis(6379, 'localhost') }),
+          store: redisStore,
           secret: process.env.SESSION_SECRET,
           resave: false,
           saveUninitialized: false,
